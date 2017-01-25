@@ -1,0 +1,25 @@
+{
+  "name": "mmm-oralb",
+  "version": "1.0.0",
+  "description": "OralB Toothbrush integration for the Magic Mirror",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SvenSommer/MMM-OralB"
+  },
+  "keywords": [
+    "magic mirror",
+    "smart mirror",
+    "OralB",
+    "module",
+    "Toothbrush"
+  ],
+  "author": "Sven Sommer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SvenSommer/MMM-OralB/issues"
+  },
+  "dependencies": {
+    "noble": "latest"
+  },
+  "homepage": "https://github.com/SvenSommer/MMM-OralB#readme"
+}
