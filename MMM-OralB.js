@@ -7,6 +7,7 @@
  * MIT Licensed.
  */
 
+
 Module.register("MMM-OralB",{
 
 	// Default module config.
@@ -15,19 +16,12 @@ Module.register("MMM-OralB",{
 			updateInterval: 10,
 	},
 
+
 	// Override dom generator.
   start: function() {
 		Log.info("Starting module: " + this.name);
 		moment.locale(config.language);
-		this.searchToothbrush();
-	},
-
-	searchToothbrush: function() {
-			var self = this;
-			this.sendSocketNotification('SEARCH_TOOTHBRUSH');
-			setInterval(function() {
-					self.sendSocketNotification('SEARCH_TOOTHBRUSH');
-			}, this.config.updateInterval * 1000);
+		this.sendSocketNotification('SEARCH_TOOTHBRUSH',"");
 	},
 
   getDom: function() {
