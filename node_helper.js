@@ -15,15 +15,15 @@ module.exports = NodeHelper.create({
         noble.on('stateChange', function(state) {
             if (state === 'poweredOn') {
                 noble.startScanning([], true);
-                console.log('scanning started...');
-            } else if (state === 'unknown'){
-                console.log('unable to initialise bluetooth adapter -> state unknown');
+                console.log('scanning was started. Everything is working fine.');
             }
             else  {
                 noble.stopScanning();
                 console.log('scanning stopped.');
             }
         }.bind(this));
+
+
     },
 
     socketNotificationReceived: function(notification, payload) {
