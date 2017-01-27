@@ -5,8 +5,9 @@
 var NodeHelper = require("node_helper");
 var noble = require('noble');
 
-
+//Paste your ID here
 var toothbrush_uuid = '544a1621209f';
+
 process.env['NOBLE_HCI_DEVICE_ID'] = 0
 var inRange = [];
 var EXIT_GRACE_PERIOD = 2000; // milliseconds
@@ -61,12 +62,25 @@ noble.on('stateChange', function(state) {
 });
 
 setInterval(function() {
-  for (var id in inRange) {
-    if (inRange[id].lastSeen < (Date.now() - EXIT_GRACE_PERIOD)) {
-      var peripheral = inRange[id].peripheral;
-      delete inRange[id];
+    for (var id in inRange) {
+        if (inRange[id].lastSeen < (Date.now() - EXIT_GRACE_PERIOD)) {
+            var peripheral = inRange[id].peripheral;
+                if (peripheral.uuid === toothbrush_uuid){
+                    console.log('Toothbrush connection LOST at ' + new Date() + ' was alive since ' + inRange[id].datealive);
+                    var diff = new Date() - inRange[id].datealive;
+                    if (Math.floor(diff / (1000)) > 3) {
+                        var colldown_diff = new Date() - cooldown_date
+                        console.log('Cooldown was' + Math.floor(colldown_diff / (1000)) + ' sec => => resetting timer');
+                        isrunning = false;
+                        Clock.stop();
+                    }
+                    else {
+                    console.log('two input in less than 3 sec! ('+ Math.floor(diff / (1000)) + ' sec) => ignoring input!' );
+                    }
+                }
+            delete inRange[id];
+        }
     }
-  }
 }, EXIT_GRACE_PERIOD / 2);
 
 function searchToothbrush(){
@@ -80,11 +94,11 @@ function searchToothbrush(){
                 datealive:  new Date()
             };
             if (peripheral.uuid === toothbrush_uuid){
-                //console.log('Toothbrush ALIVE ' + new Date());
+                console.log('Toothbrush connection ALIVE at' + new Date());
 
                 if (isrunning === true) {
                     console.log('Toothbrush stopped. "Cool down" for 32 seconds needed!');
-                    Clock.stop();
+                    Clock.pause();
                     isrunning = false;
                     cooldown_date = new Date();
                 }else {
