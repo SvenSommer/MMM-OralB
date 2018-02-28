@@ -19,8 +19,11 @@ console.log('Searching for OralB Toothbrushes with manufacturerData: "' + OralB_
 
 noble.on('discover', function(peripheral) {
     var advertisement = peripheral.advertisement;
-    if (advertisement.manufacturerData.toString('hex') === OralB_manufacturerData) {
-        console.log('Found OralB Tootbrush with ID: ' + peripheral.id);
-        noble.stopScanning();
+    if (advertisement.manufacturerData) {
+        if (advertisement.manufacturerData.toString('hex') === OralB_manufacturerData) {
+            console.log('Found OralB Tootbrush with ID: ' + peripheral.id);
+            noble.stopScanning();
+        }
     }
+
 });

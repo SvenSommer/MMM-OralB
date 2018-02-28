@@ -9,27 +9,38 @@ var noble = require('noble');
 
 module.exports = NodeHelper.create({
 
-    start: function () {
-        console.log(this.name + ' helper started ...');
+    // Override socketNotificationReceived method.
 
-        noble.on('stateChange', function(state) {
-            if (state === 'poweredOn') {
-                noble.startScanning([], true);
-                console.log('scanning was started. Everything is working fine.');
-            }
-            else  {
-                noble.stopScanning();
-                console.log('scanning stopped.');
-            }
-        }.bind(this));
+	/* socketNotificationReceived(notification, payload)
+	 * This method is called when a socket notification arrives.
+	 *
+	 * argument notification string - The identifier of the noitication.
+	 * argument payload mixed - The payload of the notification.
+	 */
+	socketNotificationReceived: function(notification, payload) {
+		var self = this;
+		this.config = payload;
+		if (self.config.debug) {
+			 console.log(notification, "received by node_helper.js received");
+		}
+		if (notification === "MMM-OralB-GET_DATA") {
+			this.getDataFromBrush(function(data){
+					self.sendNotification_DISPLAY_DATA(data);
+			});
+		}
+	},
 
+	// Example function send notification test
+	sendNotification_DISPLAY_DATA: function(payload) {
+		this.sendSocketNotification("MMM-OralB-DISPLAY_DATA", payload);
+	},
 
-    },
+	getDataFromBrush: function(callback) {
+		var	self = this;
+        var toothbrushDataObject= {
+			'brushingTime':   24 ,
+			'sector':  4}
 
-    socketNotificationReceived: function(notification, payload) {
-        if (notification === "SEARCH_TOOTHBRUSH") {
-            console.log('Notification SEARCH_TOOTHBRUSH in ' + this.name + ' received');
-            return;
-        }
-    }
+		callback(toothbrushDataObject);
+	},
 });
