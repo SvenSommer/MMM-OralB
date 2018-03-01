@@ -5,7 +5,7 @@
  * MIT Licensed.
  */
 var NodeHelper = require('node_helper');
-var noble = require('noble');
+//var noble = require('noble');
 
 module.exports = NodeHelper.create({
 
@@ -37,8 +37,9 @@ module.exports = NodeHelper.create({
 
 	getDataFromBrush: function(callback) {
 		var	self = this;
+		var d = new Date();
         var toothbrushDataObject= {
-			'brushingTime':   24 ,
+			'brushingTime':   "00:" + ("0" + d.getSeconds()).slice(-2) ,
 			'sector':  4}
 
 		callback(toothbrushDataObject);

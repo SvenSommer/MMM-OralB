@@ -7,13 +7,12 @@
  * MIT Licensed.
  */
 
-
 Module.register("MMM-OralB",{
 
 	// Default module config.
 	defaults: {
-			updateInterval: 10,
-			debug: false
+			updateInterval: 1000,
+			debug: true
 	},
 
 	requiresVersion: "2.1.0", // Required version of MagicMirror
@@ -92,13 +91,13 @@ Module.register("MMM-OralB",{
 
 			var wrapperDataNotification = document.createElement("div");
 			var timelabel = document.createElement("label");
-			timelabel.innerHTML = dataNotification.brushingTime;
+			timelabel.innerHTML =  this.translate("Time") + this.dataNotification.brushingTime;
 			wrapper.appendChild(timelabel);
 
 			if (this.config.debug) {
 				var d = new Date();
 				var labelLastUpdate = document.createElement("label");
-				labelLastUpdate.innerHTML = "Updated: " + ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2)+ ":" + ("0" + d.getSeconds()).slice(-2) + "<br>Intervall: " + this.config.updateInterval/1000 + "s";
+				labelLastUpdate.innerHTML = "<br><br>Updated: " + ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2)+ ":" + ("0" + d.getSeconds()).slice(-2) + "<br>Intervall: " + this.config.updateInterval/1000 + "s";
 				wrapper.appendChild(labelLastUpdate);
 			}
 
@@ -120,7 +119,7 @@ Module.register("MMM-OralB",{
 	getTranslations: function() {
 		return {
 				en: "translations/en.json",
-				es: "translations/es.json",
+			    es: "translations/es.json",
 				de: "translations/de.json",
 
 			};
