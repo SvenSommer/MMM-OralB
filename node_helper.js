@@ -5,8 +5,8 @@
  * MIT Licensed.
  */
 
-var NodeHelper = require('node_helper');
-var noble = require('noble');
+const NodeHelper = require('node_helper');
+const noble = require('noble');
 
 module.exports = NodeHelper.create({
 	start() {
@@ -18,6 +18,7 @@ module.exports = NodeHelper.create({
 			}
 		});
 
+		// FIXME: rate limit for one device
 		noble.on('discover', (peripheral) => {
 			var adv = peripheral.advertisement;
 			if (adv.manufacturerData) {
@@ -42,29 +43,35 @@ module.exports = NodeHelper.create({
 	parseDataPG(data) {
 		var payload = {};
 
-		// len, data	1:2
-		// 5: ...
-		payload.battery = data[3+2];
+		payload.state = data[3+2];
 		payload.over_pressure = data[4+2];	// NOTE: could also be flags
 		payload.time_min = data[5+2];
 		payload.time_sec = data[6+2];
 		payload.mode = data[7+2];
+		payload.sector = data[8+2];		// no sector: 15, last_sector: 0
 
 		payload.data = data;
-		payload.unknown = data[0+2] + "," + data[1+2] + "," + data[2+2];        // 1, 2, 5
-		// ??? data[8+2]
 
-		var payload2str = {
+		const state2str = {
+			2: "idle",
+			3: "brushing",
+			4: "charging"
+		};
+
+		const mode2str = {
+			0: "off",
 			1: "daily clean",
 			2: "sensitive",
 			3: "massage",
 			4: "whitening",
 			5: "deep clean",
-			6: "??? tongue cleaning"
+			6: "tongue cleaning"
+			7: "turbo"
 		};
 
 		payload.time = payload.time_min * 60 + payload.time_sec;
-		payload.mode_str = payload2str[payload.mode];
+		payload.mode_str = mode2str[payload.mode];
+		payload.state_str = state2str[payload.state];
 
 		return payload;
 	}
