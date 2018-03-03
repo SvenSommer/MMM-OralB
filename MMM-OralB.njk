@@ -3,10 +3,11 @@
 	https://mozilla.github.io/nunjucks/templating.html#autoescaping
 -->
 
+{{gfx | safe}}
 <div class="small">
-	<div>time:{{time_min}}:{{time_sec}}</div><br/>
-	<div>mode:{{mode_str}}</div><br/>
-	<div>state:{{state_str}}</div><br/>
-	<div>pressure:{{flags.over_pressure}}</div><br/>
-	<div>sector:{{sector}}</div><br/>
+	<div>time:{{time_min}}:{{time_sec}}</div>
+	<div>mode:{{mode_str}}</div>
+	<div>state:{{state_str}}</div>
+	<div>pressure:{{flags.over_pressure}}</div>
+	<div>sector:{{sector}}</div>
 </div>
