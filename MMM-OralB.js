@@ -11,6 +11,10 @@ Module.register('MMM-OralB', {
 	defaults: {
 	},
 
+	getStyles() {
+		return ["MMM-OralB_styles.css"];
+	},
+
 	init() {
 		this.notificationData = {};
 		this.gfx = [
@@ -35,37 +39,36 @@ Module.register('MMM-OralB', {
 
 
 	getDom() {
-		var wrapper = document.createElement("div");
-
 		var svgns = "http://www.w3.org/2000/svg";
 
+		var wrapper = document.createElement("div");
 		var svgWrapper = document.createElementNS(svgns, 'svg');
 		svgWrapper.setAttribute("width", "150px");
 		svgWrapper.setAttribute("height", "150px");
 		var gWrapper = document.createElementNS(svgns, 'g');
-		gWrapper.setAttribute("stroke", "darkgrey");
-		gWrapper.setAttribute("fill", "none");
 
 		var payload = this.notificationData;
 		if (payload === {}) {
 			return wrapper;
 		}
 
-		console.dir(payload);
+		// DEBUG
+		// console.dir(payload);
 
-		var i=0;
-
-		for (;i<4 && i<payload.sector;i++) {
+		for (var i=0;i<4;i++) {
 			var newElement = document.createElementNS(svgns, 'path');
 			newElement.setAttribute("d", this.gfx[i]);
-			newElement.style.fill = "darkgrey";
+
+			if (i<payload.sector) {
+				newElement.classList.add("enabled");
+			}
+
+			if (i == payload.sector-1) {
+				newElement.classList.add("blinking");
+			}
 			gWrapper.appendChild(newElement);
 		}
-		for (;i<4;i++) {
-			var newElement = document.createElementNS(svgns, 'path');
-			newElement.setAttribute("d", this.gfx[i]);
-			gWrapper.appendChild(newElement);
-		}
+
 		svgWrapper.appendChild(gWrapper);
 
 		function appendTxt(node, key, val) {
@@ -82,7 +85,6 @@ Module.register('MMM-OralB', {
 			appendTxt(txtWrapper, "mode", payload.mode_str);
 			appendTxt(txtWrapper, "state", payload.state_str);
 			appendTxt(txtWrapper, "pressure", payload.over_pressure);
-			appendTxt(txtWrapper, "sector", payload.sector);
 		}
 
 		txtWrapper.className = "dimmed small";

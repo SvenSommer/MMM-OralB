@@ -1,0 +1,18 @@
+svg {
+	stroke: darkgrey;
+	fill: none;
+}
+
+svg .enabled {
+	fill: lightgrey;
+}
+
+@keyframes img-animate {
+	0%	{fill: lightgrey}
+	50%	{fill: black}
+	100%	{fill: lightgrey}
+}
+
+svg .blinking {
+	animation: img-animate 2s linear infinite;
+}
