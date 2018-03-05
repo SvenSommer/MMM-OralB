@@ -34,7 +34,7 @@ module.exports = NodeHelper.create({
 					payload.manufacturerId = manufacturerId;
 
 					// DEBUG
-					console.dir(payload);
+					//console.dir(payload);
 
 					this.sendSocketNotification('MMM-OralB-DISPLAY_DATA', payload);
 				}
