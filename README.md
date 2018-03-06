@@ -18,8 +18,8 @@ sudo setcap -r cap_net_raw+eip ~/MagicMirror/node_modules/electron/dist/electron
 ```
 8. As a sideeffect electron cannot find the shared objects (since it's not compiled with the proper -rpathe set):
 ```
-sudo cp -l ~MagicMirror/node_modules/electron/dist/libnode.so /usr/lib/
-sudo cp -l ~MagicMirror/node_modules/electron/dist/libffmpeg.so /usr/lib/
+sudo cp -l ~/MagicMirror/node_modules/electron/dist/libnode.so /usr/lib/
+sudo cp -l ~/MagicMirror/node_modules/electron/dist/libffmpeg.so /usr/lib/
 ```
 
 
