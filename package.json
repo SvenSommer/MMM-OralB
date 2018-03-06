@@ -6,6 +6,9 @@
     "type": "git",
     "url": "https://github.com/SvenSommer/MMM-OralB"
   },
+  "scripts": {
+    "postinstall": "npm rebuild --runtime=electron --force"
+  },
   "keywords": [
     "magic mirror",
     "smart mirror",
