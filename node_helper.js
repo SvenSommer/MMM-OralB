@@ -11,6 +11,7 @@ const noble = require('noble');
 module.exports = NodeHelper.create({
 	start() {
 		this.duplicateData = {};
+		this.duplicateFilterTimeout = 0;	// 0 ... do not timeout data
 
 		noble.on('stateChange', (state) => {
 			if (state === 'poweredOn') {
@@ -34,7 +35,7 @@ module.exports = NodeHelper.create({
 					payload.manufacturerId = manufacturerId;
 
 					// DEBUG
-					//console.dir(payload);
+					// console.dir(payload);
 
 					this.sendSocketNotification('MMM-OralB-DISPLAY_DATA', payload);
 				}
@@ -43,20 +44,32 @@ module.exports = NodeHelper.create({
 	},
 
 	socketNotificationReceived(notification, payload) {
+		if (notification === 'MMM-OralB-CONFIG') {
+			if (payload.autoHide > 0) {
+				this.duplicateFilterTimeout = payload.autoHide/2;
+			}
+		}
+
 		console.log(`rx_helper ${notification}`);
 	},
 
 	isDuplicate(id, data) {
-		if (this.duplicateData[id] && !Buffer.compare(data, this.duplicateData[id])) {
-			return true;
+		if (this.duplicateData[id] && !Buffer.compare(data, this.duplicateData[id].data)) {		// is duplicate
+			if (!this.duplicateFilterTimeout || this.duplicateData[id].timeout > Date.now()) {	// if timeout chekck for timeout
+				return true;
+			}
 		}
 
-		this.duplicateData[id] = data;
+		this.duplicateData[id] = {
+			data,
+			timeout: Date.now() + this.duplicateFilterTimeout * 1000
+		};
+
 		return false;
 	},
 
 	// NOTE: the following is guesswork, and if you have further information to back this up,
-	//      or contradict this, please let me know <thomas>
+	//      or contradict this, please let me know
 	parseDataPG(data) {
 		var payload = {};
 
@@ -70,20 +83,20 @@ module.exports = NodeHelper.create({
 		payload.data = data;
 
 		const state2str = {
-			2: "idle",
-			3: "brushing",
-			4: "charging"
+			2: 'idle',
+			3: 'brushing',
+			4: 'charging'
 		};
 
 		const mode2str = {
-			0: "off",
-			1: "daily clean",
-			2: "sensitive",
-			3: "massage",
-			4: "whitening",
-			5: "deep clean",
-			6: "tongue cleaning",
-			7: "turbo"
+			0: 'off',
+			1: 'daily clean',
+			2: 'sensitive',
+			3: 'massage',
+			4: 'whitening',
+			5: 'deep clean',
+			6: 'tongue cleaning',
+			7: 'turbo'
 		};
 
 		payload.time = payload.time_min * 60 + payload.time_sec;
