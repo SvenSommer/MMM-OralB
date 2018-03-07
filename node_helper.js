@@ -22,15 +22,15 @@ module.exports = NodeHelper.create({
 		});
 
 		noble.on('discover', (peripheral) => {
-			var adv = peripheral.advertisement;
+			const adv = peripheral.advertisement;
 			if (adv.manufacturerData) {
 				if (this.isDuplicate(peripheral.id, adv.manufacturerData)) {
 					return;
 				}
 
-				var manufacturerId = adv.manufacturerData.readUInt16LE();
-				if (manufacturerId == 0x00DC) {	// Procter & Gamble
-					var payload = this.parseDataPG(adv.manufacturerData);
+				const manufacturerId = adv.manufacturerData.readUInt16LE();
+				if (manufacturerId === 0x00DC) {	// Procter & Gamble
+					const payload = this.parseDataPG(adv.manufacturerData);
 					payload.id = peripheral.id;
 					payload.manufacturerId = manufacturerId;
 
@@ -46,7 +46,7 @@ module.exports = NodeHelper.create({
 	socketNotificationReceived(notification, payload) {
 		if (notification === 'MMM-OralB-CONFIG') {
 			if (payload.autoHide > 0) {
-				this.duplicateFilterTimeout = payload.autoHide/2;
+				this.duplicateFilterTimeout = payload.autoHide / 2;
 			}
 		}
 
@@ -71,14 +71,14 @@ module.exports = NodeHelper.create({
 	// NOTE: the following is guesswork, and if you have further information to back this up,
 	//      or contradict this, please let me know
 	parseDataPG(data) {
-		var payload = {};
+		const payload = {};
 
-		payload.state = data[3+2];
-		payload.over_pressure = data[4+2];	// NOTE: could also be flags
-		payload.time_min = data[5+2];
-		payload.time_sec = data[6+2];
-		payload.mode = data[7+2];
-		payload.sector = data[8+2];		// no sector: 15, last_sector: 0
+		payload.state = data[3 + 2];
+		payload.over_pressure = data[4 + 2];	// NOTE: could also be flags
+		payload.time_min = data[5 + 2];
+		payload.time_sec = data[6 + 2];
+		payload.mode = data[7 + 2];
+		payload.sector = data[8 + 2];		// no sector: 15, last_sector: 0
 
 		payload.data = data;
 

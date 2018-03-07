@@ -32,7 +32,7 @@ Module.register('MMM-OralB', {
 
 	socketNotificationReceived(notification, payload) {
 		if (notification === 'MMM-OralB-DISPLAY_DATA') {
-			let key = payload.id;
+			const key = payload.id;
 
 			if (this.notificationData[key] && this.notificationData[key]._autohideTimer) {
 				clearTimeout(this.notificationData[key]._autohideTimer);
@@ -44,9 +44,9 @@ Module.register('MMM-OralB', {
 	},
 
 	getDom() {
-		var wrapper = document.createElement('div');
+		const wrapper = document.createElement('div');
 
-		for (var id in this.notificationData) {
+		for (const id in this.notificationData) {
 			wrapper.appendChild(this.notificationData[id]._dom || this.getDomData(id));
 		}
 
@@ -54,15 +54,15 @@ Module.register('MMM-OralB', {
 	},
 
 	getDomData(id) {
-		var svgns = 'http://www.w3.org/2000/svg';
+		const svgns = 'http://www.w3.org/2000/svg';
 
-		var wrapper = document.createElement('div');
-		var svgWrapper = document.createElementNS(svgns, 'svg');
+		const wrapper = document.createElement('div');
+		const svgWrapper = document.createElementNS(svgns, 'svg');
 		svgWrapper.setAttribute('width', '150px');
 		svgWrapper.setAttribute('height', '150px');
-		var gWrapper = document.createElementNS(svgns, 'g');
+		const gWrapper = document.createElementNS(svgns, 'g');
 
-		var payload = this.notificationData[id];
+		const payload = this.notificationData[id];
 		if (payload === {}) {
 			return wrapper;
 		}
@@ -70,15 +70,15 @@ Module.register('MMM-OralB', {
 		// DEBUG
 		// console.dir(payload);
 
-		for (var i=1;i<=4;i++) {
-			var newElement = document.createElementNS(svgns, 'path');
-			newElement.setAttribute('d', this.gfx[i-1]);
+		for (let i = 1; i <= 4; i++) {
+			const newElement = document.createElementNS(svgns, 'path');
+			newElement.setAttribute('d', this.gfx[i - 1]);
 
-			if (i<=payload.sector) {
+			if (i <= payload.sector) {
 				newElement.classList.add('enabled');
 			}
 
-			if (i == payload.sector) {
+			if (i === payload.sector) {
 				newElement.classList.add('blinking');
 			}
 			gWrapper.appendChild(newElement);
@@ -87,16 +87,16 @@ Module.register('MMM-OralB', {
 		svgWrapper.appendChild(gWrapper);
 
 		function appendTxt(node, key, val) {
-			var elem = document.createElement('div');
-			elem.innerHTML = key + ': ' + val;
+			const elem = document.createElement('div');
+			elem.innerHTML = `${key}: ${val}`;
 
 			node.appendChild(elem);
 			return elem;
 		}
 
-		var txtWrapper = document.createElement('div');
+		const txtWrapper = document.createElement('div');
 		if (payload.time_min !== undefined) {
-			appendTxt(txtWrapper, 'time', payload.time_min + ':' + payload.time_sec);
+			appendTxt(txtWrapper, 'time', `${payload.time_min}:${payload.time_sec}`);
 			appendTxt(txtWrapper, 'mode', payload.mode_str);
 			appendTxt(txtWrapper, 'state', payload.state_str);
 			appendTxt(txtWrapper, 'pressure', payload.over_pressure);
@@ -120,5 +120,5 @@ Module.register('MMM-OralB', {
 		}
 
 		return wrapper;
-	},
+	}
 });
