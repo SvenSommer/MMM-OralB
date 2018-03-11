@@ -47,7 +47,9 @@ Module.register('MMM-OralB', {
 		const wrapper = document.createElement('div');
 
 		for (const id in this.notificationData) {
-			wrapper.appendChild(this.notificationData[id]._dom || this.getDomData(id));
+			if ({}.hasOwnProperty.call(this.notificationData, id)) {
+				wrapper.appendChild(this.notificationData[id]._dom || this.getDomData(id));
+			}
 		}
 
 		return wrapper;
@@ -57,19 +59,18 @@ Module.register('MMM-OralB', {
 		const svgns = 'http://www.w3.org/2000/svg';
 
 		const wrapper = document.createElement('div');
-		const svgWrapper = document.createElementNS(svgns, 'svg');
-		svgWrapper.setAttribute('width', '150px');
-		svgWrapper.setAttribute('height', '150px');
-		const gWrapper = document.createElementNS(svgns, 'g');
 
 		const payload = this.notificationData[id];
 		if (payload === {}) {
 			return wrapper;
 		}
 
-		// DEBUG
-		// console.dir(payload);
+		// create svg
+		const svgWrapper = document.createElementNS(svgns, 'svg');
+		svgWrapper.setAttribute('width', '150px');
+		svgWrapper.setAttribute('height', '150px');
 
+		const gWrapper = document.createElementNS(svgns, 'g');
 		for (let i = 1; i <= 4; i++) {
 			const newElement = document.createElementNS(svgns, 'path');
 			newElement.setAttribute('d', this.gfx[i - 1]);
@@ -86,20 +87,21 @@ Module.register('MMM-OralB', {
 
 		svgWrapper.appendChild(gWrapper);
 
-		function appendTxt(node, key, val) {
+		// create text
+		const txtWrapper = document.createElement('div');
+		txtWrapper.appendTxt = (key, val) => {
 			const elem = document.createElement('div');
 			elem.innerHTML = `${key}: ${val}`;
 
-			node.appendChild(elem);
+			txtWrapper.appendChild(elem);
 			return elem;
 		}
 
-		const txtWrapper = document.createElement('div');
 		if (payload.time_min !== undefined) {
-			appendTxt(txtWrapper, 'time', `${payload.time_min}:${payload.time_sec}`);
-			appendTxt(txtWrapper, 'mode', payload.mode_str);
-			appendTxt(txtWrapper, 'state', payload.state_str);
-			appendTxt(txtWrapper, 'pressure', payload.over_pressure);
+			txtWrapper.appendTxt('time', `${payload.time_min}:${payload.time_sec}`);
+			txtWrapper.appendTxt('mode', payload.mode_str);
+			txtWrapper.appendTxt('state', payload.state_str);
+			txtWrapper.appendTxt('pressure', payload.over_pressure);
 		}
 
 		txtWrapper.className = 'dimmed small';
@@ -110,10 +112,10 @@ Module.register('MMM-OralB', {
 		wrapper.append(txtWrapper);
 
 		// cache the dom data
-		this.notificationData[id]._dom = wrapper;
+		payload._dom = wrapper;
 
 		if (this.config.autoHide > 0) {
-			this.notificationData[id]._autohideTimer = setTimeout(() => {
+			payload._autohideTimer = setTimeout(() => {
 				delete this.notificationData[id];
 				this.updateDom();
 			}, this.config.autoHide * 1000);
