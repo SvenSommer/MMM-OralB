@@ -91,14 +91,19 @@ Module.register('MMM-OralB', {
 		const txtWrapper = document.createElement('div');
 		txtWrapper.appendTxt = (key, val) => {
 			const elem = document.createElement('div');
-			elem.innerHTML = `${key}: ${val}`;
+			elem.setAttribute('id', key);
+			elem.setAttribute('class', 'entry');
+			elem.innerHTML = val;
 
 			txtWrapper.appendChild(elem);
 			return elem;
 		}
 
 		if (payload.time_min !== undefined) {
-			txtWrapper.appendTxt('time', `${payload.time_min}:${payload.time_sec}`);
+			const time_min_str = `0${payload.time_min}`.slice (-2);
+			const time_sec_str = `0${payload.time_sec}`.slice (-2);
+
+			txtWrapper.appendTxt('time', `${time_min_str}:${time_sec_str}`);
 			txtWrapper.appendTxt('mode', payload.mode_str);
 			txtWrapper.appendTxt('state', payload.state_str);
 			txtWrapper.appendTxt('pressure', payload.over_pressure);

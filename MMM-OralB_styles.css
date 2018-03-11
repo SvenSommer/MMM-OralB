@@ -1,18 +1,39 @@
 svg {
-	stroke: darkgrey;
+	stroke: lightgrey;
 	fill: none;
 }
 
 svg .enabled {
-	fill: lightgrey;
+	fill: white;
 }
 
 @keyframes img-animate {
-	0%	{fill: lightgrey}
+	0%	{fill: white}
 	50%	{fill: black}
-	100%	{fill: lightgrey}
+	100%	{fill: white}
 }
 
 svg .blinking {
 	animation: img-animate 2s linear infinite;
+}
+
+.entry:before {
+	content: attr(id)': ';
+}
+
+div.entry {
+	font-size: 1em;
+	font-weight: 300;
+	line-height: 1em;
+}
+
+#time:before {
+	content: '';
+}
+
+div#time {
+	color: white;
+	font-size: 4em;
+	font-weight: 300;
+	line-height: 1em;
 }
